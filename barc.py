@@ -6,6 +6,7 @@ import requests
 import os
 from PIL import Image, ImageFont, ImageDraw
 import textwrap
+import csv
 
 st.set_page_config(page_title="Barcode Generator")
 
