@@ -60,35 +60,32 @@ with Image.open(filename) as img:
     # Get the size of the barcode image
     width, height = img.size
 
-    max_title_width = 40 # Set the maximum width for the product title text
+    max_title_width = width * 3 # Set the maximum width for the product title text to three times the width of the barcode
     wrapped_title = textwrap.wrap(title_textbox, width=max_title_width, break_long_words=True) # Wrap the product title text into multiple lines if it is too long to fit
     wrapped_title_height = 0 # Calculate the total height required for the wrapped product title text
     for line in wrapped_title:
         wrapped_title_height += font.getsize(line)[1]
 
     # Calculate the total width required for the title and barcode
-    total_width = width * 2 # Set the total width to be twice the width of the barcode image
+    total_width = max(width, font.getsize(title_textbox)[0])
 
-    # Calculate the actual width required for the wrapped product title text
-    actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
-
-    # Set the width of the title to be either half the width of the original image, or the actual width required for the wrapped title text, whichever is smaller
-    title_width = min(actual_title_width, int(width / 2))
-
-    new_width = title_width + 2 # Add extra margin on both sides
-    new_height = height + wrapped_title_height + 82 # Add extra margin at bottom
+    new_width = width * 2 # Fix the width to twice the width of the barcode
+    new_height = height + wrapped_title_height + 3 * height # Add extra margin at bottom
     new_img = Image.new("RGBA", (new_width, new_height), color=(255, 255, 255, 255))
 
     # Paste the barcode image onto the new image
     barcode_img = img.convert("RGBA") # Convert the mode of the barcode image to RGBA
     new_img.paste(barcode_img, (int((new_width - width) / 2), 0))
 
+    # Get the actual width of the wrapped product title text
+    actual_title_width = min([font.getsize(line)[0] for line in wrapped_title])
+
     # Create a transparent overlay for the wrapped product title text
     overlay = Image.new("RGBA", new_img.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay)
 
     # Draw the wrapped product title text onto the overlay
-    y = height + 10
+    y = height + 2 * height
     for line in wrapped_title:
         w, h = font.getsize(line)
         x = int((new_width - w) / 2)
@@ -101,7 +98,6 @@ with Image.open(filename) as img:
     # Save the final image with the product title as the filename
     final_filename = "{}_final.png".format(title)
     new_img.save(final_filename)
-
     # Display the new image with the product title
     st.image(final_filename, width=width)
 
