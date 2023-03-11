@@ -80,8 +80,8 @@ table = st.empty()
 def clear_data():
     # clear dataframe
     df = pd.DataFrame(columns=["barcode", "title"])
-    table.dataframe(pd.DataFrame(columns=["barcode", "title"])
-    
+    table.dataframe(pd.DataFrame(columns=["barcode", "title"]))
+
     # clear JSON file
     with open("products.json", "w") as f:
         json.dump([], f)
