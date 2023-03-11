@@ -24,7 +24,7 @@ generate_button = st.button("Generate Barcode")
 def generate_barcode():
     global filename  # make filename accessible inside the function
     barcode = barcode_textbox
-
+    title = title_textbox
     # Generate barcode image for the entered barcode
     # Set the barcode type to EAN13
     bcid = "ean13"
@@ -94,7 +94,7 @@ def generate_barcode():
         new_img = Image.alpha_composite(new_img, overlay)
 
         # Save the final image with the product title as the filename
-        final_filename = "{}_final.png".format(barcode)
+        final_filename = "{}_final.png".format(title)
         new_img.save(final_filename)
         st.write("Saved final image as:", final_filename)
         # Display the new image with the product title
