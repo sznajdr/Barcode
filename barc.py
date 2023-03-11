@@ -60,7 +60,7 @@ def generate_barcode():
         wrapped_title_height = 0 # Calculate the total height required for the wrapped product title text
         for line in wrapped_title:
             wrapped_title_height += font.getsize(line)[1]
-            
+
         # Calculate the total width required for the title and barcode
         total_width = max(width, font.getsize(title_textbox)[0])
 
@@ -71,9 +71,9 @@ def generate_barcode():
         # Paste the barcode image onto the new image
         barcode_img = img.convert("RGB") # Convert the mode of the barcode image to RGB
         new_img.paste(barcode_img, (int((new_width - width) / 2), 0))
-        new_img = img.convert("RGBA") # Convert the mode of the barcode image to RGB
+        new_img = new_img.convert("RGBA") # Convert the mode of the new image to RGBA
 
-         # Get the actual width of the wrapped product title text
+        # Get the actual width of the wrapped product title text
         actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
 
         # Calculate the x-coordinate of the title text to center it horizontally
@@ -82,8 +82,7 @@ def generate_barcode():
         # Set up the drawing context
         draw = ImageDraw.Draw(new_img)
 
-            # Draw the product title onto the new image
-        draw = ImageDraw.Draw(new_img)
+        # Draw the product title onto the new image
         y_offset = height + 12 # Add extra margin
         for line in wrapped_title:
             # Get the width of the current line of text
@@ -93,18 +92,16 @@ def generate_barcode():
             x_offset = int((new_width - line_width) / 2)
 
             # Draw the text on the new image
-            draw.text((x_offset, y_offset), line, font=font, fill=(0, 0, 0, 255))
-
-            # Move the Y offset down to the next line of text
+            draw.text            (x_offset, y_offset), line, font=font, fill=(0, 0, 0, 255))
             y_offset += line_height
 
-        # Save the new image with the wrapped product title text
-        new_filename = "{}_title.png".format(barcode)
-        new_img.save(new_filename)
-        st.write("Saved barcode image with title as:", new_filename)
-        
-        # Display the new image with the product title
-        st.image(new_filename, use_column_width=True)
+            # Save the final image with the wrapped product title text
+            new_filename = "{}_title.png".format(barcode)
+            new_img.save(new_filename)
+            st.write("Saved final barcode image with title as:", new_filename)
+
+            # Display the new image with the product title
+            st.image(new_filename, use_column_width=True)
 
 if generate_button:
     generate_barcode()
