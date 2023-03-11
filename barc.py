@@ -67,14 +67,21 @@ with Image.open(filename) as img:
         wrapped_title_height += font.getsize(line)[1]
 
     # Calculate the total width required for the title and barcode
+    total_width = width * 2 # Set the total width to be twice the width of the barcode image
+
+    # Calculate the actual width required for the wrapped product title text
     actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
-    total_width = max(width, actual_title_width) + 2 # Add extra margin on both sides
+
+    # Set the width of the title to be either half the width of the original image, or the actual width required for the wrapped title text, whichever is smaller
+    title_width = min(actual_title_width, int(width / 2))
+
+    new_width = title_width + 2 # Add extra margin on both sides
     new_height = height + wrapped_title_height + 32 # Add extra margin at bottom
-    new_img = Image.new("RGBA", (total_width, new_height), color=(255, 255, 255, 255))
+    new_img = Image.new("RGBA", (new_width, new_height), color=(255, 255, 255, 255))
 
     # Paste the barcode image onto the new image
     barcode_img = img.convert("RGBA") # Convert the mode of the barcode image to RGBA
-    new_img.paste(barcode_img, (int((total_width - width) / 2), 0))
+    new_img.paste(barcode_img, (int((new_width - width) / 2), 0))
 
     # Create a transparent overlay for the wrapped product title text
     overlay = Image.new("RGBA", new_img.size, (0, 0, 0, 0))
@@ -84,7 +91,7 @@ with Image.open(filename) as img:
     y = height + 10
     for line in wrapped_title:
         w, h = font.getsize(line)
-        x = int((total_width - w) / 2)
+        x = int((new_width - w) / 2)
         draw.text((x, y), line, font=font, fill=(0, 0, 0, 255))
         y += h
 
@@ -94,8 +101,10 @@ with Image.open(filename) as img:
     # Save the final image with the product title as the filename
     final_filename = "{}_final.png".format(title)
     new_img.save(final_filename)
+
     # Display the new image with the product title
     st.image(final_filename, width=width)
+
 
     
 if generate_button:
