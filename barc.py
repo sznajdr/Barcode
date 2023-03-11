@@ -44,7 +44,6 @@ def generate_barcode():
 
     # Set the API endpoint URL with includetext parameter
     url = "https://bwipjs-api.metafloor.com/?bcid={}&text={}&includetext=1&bg=ffffff".format(bcid, ean)
-    st.write("Barcode URL:", url)
 
     # Send an HTTP GET request to the API endpoint
     response = requests.get(url)
@@ -52,7 +51,6 @@ def generate_barcode():
     # Save the returned PNG image file with the product title as the filename
     with open(filename, "wb") as f:
         f.write(response.content)
-    st.write("Saved barcode image as:", filename)
 
     # Open the saved barcode image
     filename = filename.strip()
@@ -100,7 +98,6 @@ def generate_barcode():
         # Save the final image with the product title as the filename
         final_filename = "{}_final.png".format(title)
         new_img.save(final_filename)
-        st.write("Saved final image as:", final_filename)
         # Display the new image with the product title
         st.image(final_filename, width=width)
     
