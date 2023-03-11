@@ -95,13 +95,13 @@ def generate_barcode():
             draw.text((x_offset, y_offset), line, font=font, fill=(0, 0, 0, 255))
             y_offset += line_height
 
-            # Save the final image with the wrapped product title text
-            new_filename = "{}_title.png".format(barcode)
-            new_img.save(new_filename)
-            st.write("Saved final barcode image with title as:", new_filename)
+    # Save the final image with the wrapped product title text
+    new_filename = "{}_title.png".format(barcode)
+    new_img.save(new_filename)
+    st.write("Saved final barcode image with title as:", new_filename)
 
-            # Display the new image with the product title
-            st.image(new_filename, use_column_width=True)
+    # Display the new image with the product title
+    st.image(new_filename, use_column_width=True)
 
 if generate_button:
     generate_barcode()
