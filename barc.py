@@ -15,14 +15,15 @@ if not os.path.exists("Arial.ttf"):
     with open("Arial.ttf", "wb") as f:
         f.write(response.content)
 
+# Define example number and title values
+example_number = 6938936708209
+example_title = "Druckbett PEI-Guss ROUGH 330x330"
+
 # Define widgets
 barcode_textbox = st.text_input("Barcode:", value=str(example_number))
 title_textbox = st.text_input("Title:", value=str(example_title))
 generate_button = st.button("Generate Barcode")
 
-# Define example number and title values
-example_number = 6938936708209
-example_title = "Druckbett PEI-Guss ROUGH 330x330"
 
 # Define functions
 def generate_barcode():
