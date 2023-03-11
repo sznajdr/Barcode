@@ -5,6 +5,8 @@ from PIL import Image, ImageFont, ImageDraw
 import textwrap
 
 st.set_page_config(page_title="Barcode Generator")
+filename = "barcode.png"  # define filename with a default value
+
 
 # Download Arial.ttf if it doesn't exist
 if not os.path.exists("Arial.ttf"):
