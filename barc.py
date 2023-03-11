@@ -52,54 +52,51 @@ def generate_barcode():
     with open(filename, "wb") as f:
         f.write(response.content)
 
-    # Open the saved barcode image
-    filename = filename.strip()
+# Open the saved barcode image
+filename = filename.strip()
 
-    # Create a new image with extra margin to fit the wrapped product title text
-    with Image.open(filename) as img:
-        # Get the size of the barcode image
-        width, height = img.size
+# Create a new image with extra margin to fit the wrapped product title text
+with Image.open(filename) as img:
+    # Get the size of the barcode image
+    width, height = img.size
 
-        max_title_width = 40 # Set the maximum width for the product title text
-        wrapped_title = textwrap.wrap(title_textbox, width=max_title_width, break_long_words=True) # Wrap the product title text into multiple lines if it is too long to fit
-        wrapped_title_height = 0 # Calculate the total height required for the wrapped product title text
-        for line in wrapped_title:
-            wrapped_title_height += font.getsize(line)[1]
+    max_title_width = 40 # Set the maximum width for the product title text
+    wrapped_title = textwrap.wrap(title_textbox, width=max_title_width, break_long_words=True) # Wrap the product title text into multiple lines if it is too long to fit
+    wrapped_title_height = 0 # Calculate the total height required for the wrapped product title text
+    for line in wrapped_title:
+        wrapped_title_height += font.getsize(line)[1]
 
-        # Calculate the total width required for the title and barcode
-        total_width = max(width, font.getsize(title_textbox)[0])
+    # Calculate the total width required for the title and barcode
+    actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
+    total_width = max(width, actual_title_width) + 2 # Add extra margin on both sides
+    new_height = height + wrapped_title_height + 32 # Add extra margin at bottom
+    new_img = Image.new("RGBA", (total_width, new_height), color=(255, 255, 255, 255))
 
-        new_width = total_width + 2 # Add extra margin on both sides
-        new_height = height + wrapped_title_height + 32 # Add extra margin at bottom
-        new_img = Image.new("RGBA", (new_width, new_height), color=(255, 255, 255, 255))
+    # Paste the barcode image onto the new image
+    barcode_img = img.convert("RGBA") # Convert the mode of the barcode image to RGBA
+    new_img.paste(barcode_img, (int((total_width - width) / 2), 0))
 
-        # Paste the barcode image onto the new image
-        barcode_img = img.convert("RGBA") # Convert the mode of the barcode image to RGBA
-        new_img.paste(barcode_img, (int((new_width - width) / 2), 0))
+    # Create a transparent overlay for the wrapped product title text
+    overlay = Image.new("RGBA", new_img.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
 
-        # Get the actual width of the wrapped product title text
-        actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
+    # Draw the wrapped product title text onto the overlay
+    y = height + 10
+    for line in wrapped_title:
+        w, h = font.getsize(line)
+        x = int((total_width - w) / 2)
+        draw.text((x, y), line, font=font, fill=(0, 0, 0, 255))
+        y += h
 
-        # Create a transparent overlay for the wrapped product title text
-        overlay = Image.new("RGBA", new_img.size, (0, 0, 0, 0))
-        draw = ImageDraw.Draw(overlay)
+    # Merge the overlay with the new image
+    new_img = Image.alpha_composite(new_img, overlay)
 
-        # Draw the wrapped product title text onto the overlay
-        y = height + 10
-        for line in wrapped_title:
-            w, h = font.getsize(line)
-            x = int((new_width - w) / 2)
-            draw.text((x, y), line, font=font, fill=(0, 0, 0, 255))
-            y += h
+    # Save the final image with the product title as the filename
+    final_filename = "{}_final.png".format(title)
+    new_img.save(final_filename)
+    # Display the new image with the product title
+    st.image(final_filename, width=width)
 
-        # Merge the overlay with the new image
-        new_img = Image.alpha_composite(new_img, overlay)
-
-        # Save the final image with the product title as the filename
-        final_filename = "{}_final.png".format(title)
-        new_img.save(final_filename)
-        # Display the new image with the product title
-        st.image(final_filename, width=width)
     
 if generate_button:
     generate_barcode()
