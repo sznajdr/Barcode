@@ -20,6 +20,15 @@ barcode_textbox = st.text_input("Barcode:")
 title_textbox = st.text_input("Title:")
 generate_button = st.button("Generate Barcode")
 
+# Define example number and title values
+example_number = 6938936708209
+example_title = "Druckbett PEI-Guss ROUGH 330x330"
+
+
+# Add input fields for the number and title
+number_input = st.text_input("Product Number", value=str(example_number))
+title_input = st.text_input("Product Title", value=example_title)
+
 # Define functions
 def generate_barcode():
     global filename  # make filename accessible inside the function
