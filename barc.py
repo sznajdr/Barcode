@@ -22,6 +22,7 @@ generate_button = st.button("Generate Barcode")
 
 # Define functions
 def generate_barcode():
+    global filename  # make filename accessible inside the function
     barcode = barcode_textbox
 
     # Generate barcode image for the entered barcode
