@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import json
@@ -48,15 +47,6 @@ def clear_data():
         writer.writerow(["barcode", "title"])
 
 
-    # clear JSON file
-    with open("products.json", "w") as f:
-        json.dump([], f)
-        
-    # clear CSV file
-    with open("barcodes.csv", "w") as f:
-        writer = csv.writer(f)
-        writer.writerow(["barcode", "title"])
-
 def add_product():
     global products
     barcode = barcode_textbox
@@ -65,7 +55,7 @@ def add_product():
     with open("products.json", "w") as f:
         json.dump(products, f)
 
-    # Set up the drawing context
+
 def generate_barcode():
     barcode = barcode_textbox
 
@@ -82,7 +72,6 @@ def generate_barcode():
     # Set the product title as the filename
     filename = "{}.png".format(barcode)
 
-    # Set the API endpoint URL
     # Set the API endpoint URL with includetext parameter
     url = "https://bwipjs-api.metafloor.com/?bcid={}&text={}&includetext=1&bg=ffffff".format(bcid, ean)
     st.write("Barcode URL:", url)
@@ -104,7 +93,7 @@ def generate_barcode():
         width, height = img.size
         
         max_title_width = 40 # Set the maximum width for the product title text
-        wrapped_title = textwrap.wrap(title_textbox, width=max_title_width, break_long_words=TRUE) # Wrap the product title text into multiple lines if it is too long to fit
+        wrapped_title = textwrap.wrap(title_textbox, width=max_title_width, break_long_words=True) # Wrap the product title text into multiple lines if it is too long to fit
         wrapped_title_height = 0 # Calculate the total height required for the wrapped product title text
         for line in wrapped_title:
             wrapped_title_height += font.getsize(line)[1]
