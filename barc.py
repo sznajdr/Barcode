@@ -22,37 +22,36 @@ generate_button = st.button("Generate Barcode")
 
 # Define functions
 def generate_barcode():
-        global filename  # make filename accessible inside the function
-        barcode = barcode_textbox
+    global filename  # make filename accessible inside the function
+    barcode = barcode_textbox
 
-        # Generate barcode image for the entered barcode
-        # Set the barcode type to EAN13
-        bcid = "ean13"
+    # Generate barcode image for the entered barcode
+    # Set the barcode type to EAN13
+    bcid = "ean13"
 
-        # Set the font for the product title
-        font = ImageFont.truetype("Arial.ttf", size=14)
+    # Set the font for the product title
+    font = ImageFont.truetype("Arial.ttf", size=14)
 
-        # Set the EAN13 number as the text to encode
-        ean = barcode
+    # Set the EAN13 number as the text to encode
+    ean = barcode
 
-        # Set the product title as the filename
-        filename = "{}.png".format(barcode)
+    # Set the product title as the filename
+    filename = "{}.png".format(barcode)
 
-        # Set the API endpoint URL with includetext parameter
-        url = "https://bwipjs-api.metafloor.com/?bcid={}&text={}&includetext=1&bg=ffffff".format(bcid, ean)
-        st.write("Barcode URL:", url)
+    # Set the API endpoint URL with includetext parameter
+    url = "https://bwipjs-api.metafloor.com/?bcid={}&text={}&includetext=1&bg=ffffff".format(bcid, ean)
+    st.write("Barcode URL:", url)
 
-        # Send an HTTP GET request to the API endpoint
-        response = requests.get(url)
+    # Send an HTTP GET request to the API endpoint
+    response = requests.get(url)
 
-        # Save the returned PNG image file with the product title as the filename
-        with open(filename, "wb") as f:
-            f.write(response.content)
-        st.write("Saved barcode image as:", filename)
+    # Save the returned PNG image file with the product title as the filename
+    with open(filename, "wb") as f:
+        f.write(response.content)
+    st.write("Saved barcode image as:", filename)
 
-
-        # Open the saved barcode image
-        filename = filename.strip()
+    # Open the saved barcode image
+    filename = filename.strip()
 
     # Create a new image with extra margin to fit the wrapped product title text
     with Image.open(filename) as img:
@@ -70,7 +69,7 @@ def generate_barcode():
 
         new_width = total_width + 2 # Add extra margin on both sides
         new_height = height + wrapped_title_height + 32 # Add extra margin at bottom
-        new_img = Image.new("RGB", (new_width, new_height), color=(255, 255, 255, 255))
+        new_img = Image.new("RGBA", (new_width, new_height), color=(255, 255, 255, 255))
 
         # Paste the barcode image onto the new image
         barcode_img = img.convert("RGBA") # Convert the mode of the barcode image to RGBA
