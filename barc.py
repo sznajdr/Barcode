@@ -1,6 +1,4 @@
 import streamlit as st
-import pandas as pd
-import json
 import requests
 import os
 from PIL import Image, ImageFont, ImageDraw
@@ -15,43 +13,16 @@ if not os.path.exists("Arial.ttf"):
     with open("Arial.ttf", "wb") as f:
         f.write(response.content)
 
-# Load products from JSON file if it exists
-if os.path.exists("products.json"):
-    with open("products.json") as f:
-        products = json.load(f)
-else:
-    products = {"products": []}
-
 # Define widgets
 barcode_textbox = st.text_input("Barcode:")
 title_textbox = st.text_input("Title:")
-add_button = st.button("Add Product")
-add_barcode_button = st.button("Generate Barcode")
-add_clear_button = st.button("Clear Data")
-table = st.empty()
+generate_button = st.button("Generate Barcode")
 
 # Define functions
-def clear_data():
-    # clear dataframe
-    df = pd.DataFrame(columns=["barcode", "title"])
-    table.setModel(pandasModel(df))
-
-    # clear JSON file
-    with open("products.json", "w") as f:
-        json.dump({"products": []}, f)
-
-def add_product():
-    global products
-    barcode = barcode_textbox
-    title = title_textbox
-    products["products"].append({"barcode": barcode, "title": title})
-    with open("products.json", "w") as f:
-        json.dump(products, f)
-
 def generate_barcode():
     barcode = barcode_textbox
 
-    # Generate barcode image for the added barcode
+    # Generate barcode image for the entered barcode
     # Set the barcode type to EAN13
     bcid = "ean13"
 
@@ -64,7 +35,6 @@ def generate_barcode():
     # Set the product title as the filename
     filename = "{}.png".format(barcode)
 
-    # Set the API endpoint URL
     # Set the API endpoint URL with includetext parameter
     url = "https://bwipjs-api.metafloor.com/?bcid={}&text={}&includetext=1&bg=ffffff".format(bcid, ean)
     st.write("Barcode URL:", url)
@@ -103,7 +73,6 @@ def generate_barcode():
         new_img.paste(barcode_img, (int((new_width - width) / 2), 0))
         new_img = img.convert("RGBA") # Convert the mode of the barcode image to RGB
 
-
          # Get the actual width of the wrapped product title text
         actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
 
@@ -113,37 +82,26 @@ def generate_barcode():
         # Set up the drawing context
         draw = ImageDraw.Draw(new_img)
 
-        # Draw the product title onto the new image
-        y = height + 16
+               # Draw the product title onto the new image
+        draw = ImageDraw.Draw(new_img)
+        y_offset = height + 12 # Add extra margin
         for line in wrapped_title:
-            draw.text((x, y), line, font=font, fill=(0, 0, 0, 255))
-            y += font.getsize(line)[1]
+            # Get the width of the current line of text
+            line_width, line_height = font.getsize(line)
 
-        # Save the new image with the product title below the barcode
-        new_filename = "{}_with_title.png".format(barcode)
+            # Calculate the X coordinate for centering the text
+            x_offset = int((new_width - line_width) / 2)
+
+            # Draw the text on the new image
+            draw.text((x_offset, y_offset), line, font=font, fill=(0, 0, 0, 255))
+
+            # Move the Y offset down to the next line of text
+            y_offset += line_height
+
+        # Save the new image with the wrapped product title text
+        new_filename = "{}_title.png".format(barcode)
         new_img.save(new_filename)
         st.write("Saved barcode image with title as:", new_filename)
 
-        # Display the final barcode image with title
-        with open(new_filename, "rb") as f:
-            image = f.read()
-            st.image(image, caption=title_textbox, use_column_width=True)
-
-
-# Add product if Add Product button is clicked
-if add_button:
-    add_product()
-
-# Generate barcode if Generate Barcode button is clicked
-if add_barcode_button:
+if generate_button:
     generate_barcode()
-    
-# Generate barcode if Generate Barcode button is clicked
-if add_clear_button:
-    clear_data()
-
-
-# Display the products table
-table.title("Products")
-df = pd.DataFrame(products["products"])
-table.write(df)
