@@ -98,7 +98,7 @@ def generate_barcode():
         new_img.save(final_filename)
         st.write("Saved final image as:", final_filename)
         # Display the new image with the product title
-        st.image(final_filename, use_column_width=True)
+        st.image(final_filename, width=width)
     
 if generate_button:
     generate_barcode()
