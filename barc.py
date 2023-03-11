@@ -51,8 +51,8 @@ def generate_barcode():
         st.write("Saved barcode image as:", filename)
 
 
-    # Open the saved barcode image
-    filename = filename.strip()
+        # Open the saved barcode image
+        filename = filename.strip()
 
     # Create a new image with extra margin to fit the wrapped product title text
     with Image.open(filename) as img:
