@@ -6,6 +6,7 @@ import textwrap
 
 st.set_page_config(page_title="Barcode Generator")
 filename = "barcode.png"  # define filename with a default value
+[products.csv](https://colab.research.google.com/github/sznajdr/barcs/blob/main/barcodezz_csv.ipynb)
 
 
 # Download Arial.ttf if it doesn't exist
