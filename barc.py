@@ -77,27 +77,27 @@ def generate_barcode():
         actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
 
         # Calculate the total width required for the title and barcode
-total_width = max(width, font.getsize(title_textbox)[0])
+        total_width = max(width, font.getsize(title_textbox)[0])
 
-new_width = total_width + 2 # Add extra margin on both sides
-new_height = height + wrapped_title_height + 32 # Add extra margin at bottom
-new_img = Image.new("RGB", (new_width, new_height), color=(255, 255, 255, 255))
+        new_width = total_width + 2  # Add extra margin on both sides
+        new_height = height + wrapped_title_height + 32  # Add extra margin at bottom
+        new_img = Image.new("RGB", (new_width, new_height), color=(255, 255, 255, 255))
 
-# Paste the barcode image onto the new image
-barcode_img = img.convert("RGB") # Convert the mode of the barcode image to RGB
-new_img.paste(barcode_img, (int((new_width - width) / 2), 0))
-new_img = new_img.convert("RGBA") # Convert the mode of the new image to RGBA
+        # Paste the barcode image onto the new image
+        barcode_img = img.convert("RGB")  # Convert the mode of the barcode image to RGB
+        new_img.paste(barcode_img, (int((new_width - width) / 2), 0))
+        new_img = new_img.convert("RGBA")  # Convert the mode of the new image to RGBA
 
-# Get the actual width of the wrapped product title text
-actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
+        # Get the actual width of the wrapped product title text
+        actual_title_width = max([font.getsize(line)[0] for line in wrapped_title])
 
-# Draw the product title text onto the new image
-draw = ImageDraw.Draw(new_img)
-x = int((new_width - actual_title_width) / 2)
-y = height + 16
-for line in wrapped_title:
-    draw.text((x, y), line, font=font, fill=(0, 0, 0, 255))
-    y += font.getsize(line)[1]
+        # Draw the product title text onto the new image
+        draw = ImageDraw.Draw(new_img)
+        x = int((new_width - actual_title_width) / 2)
+        y = height + 16
+        for line in wrapped_title:
+            draw.text((x, y), line, font=font, fill=(0, 0, 0, 255))
+            y += font.getsize(line)[1]
 
 # Save the final barcode image with the wrapped product title text
 final_filename = "{}_title.png".format(barcode)
