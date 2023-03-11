@@ -82,7 +82,7 @@ def generate_barcode():
         # Set up the drawing context
         draw = ImageDraw.Draw(new_img)
 
-               # Draw the product title onto the new image
+            # Draw the product title onto the new image
         draw = ImageDraw.Draw(new_img)
         y_offset = height + 12 # Add extra margin
         for line in wrapped_title:
@@ -102,6 +102,9 @@ def generate_barcode():
         new_filename = "{}_title.png".format(barcode)
         new_img.save(new_filename)
         st.write("Saved barcode image with title as:", new_filename)
+        
+        # Display the new image with the product title
+        st.image(new_filename, use_column_width=True)
 
 if generate_button:
     generate_barcode()
