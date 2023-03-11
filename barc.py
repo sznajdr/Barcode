@@ -76,7 +76,7 @@ with Image.open(filename) as img:
     title_width = min(actual_title_width, int(width / 2))
 
     new_width = title_width + 2 # Add extra margin on both sides
-    new_height = height + wrapped_title_height + 32 # Add extra margin at bottom
+    new_height = height + wrapped_title_height + 82 # Add extra margin at bottom
     new_img = Image.new("RGBA", (new_width, new_height), color=(255, 255, 255, 255))
 
     # Paste the barcode image onto the new image
