@@ -5,7 +5,6 @@ import requests
 import os
 from PIL import Image, ImageFont, ImageDraw
 import textwrap
-import csv
 
 st.set_page_config(page_title="Barcode Generator")
 
@@ -35,17 +34,11 @@ table = st.empty()
 def clear_data():
     # clear dataframe
     df = pd.DataFrame(columns=["barcode", "title"])
-    table.dataframe(df)
+    table.setModel(pandasModel(df))
 
     # clear JSON file
     with open("products.json", "w") as f:
-        json.dump([], f)
-        
-    # clear CSV file
-    with open("barcodes.csv", "w") as f:
-        writer = csv.writer(f)
-        writer.writerow(["barcode", "title"])
-
+        json.dump({"products": []}, f)
 
 def add_product():
     global products
@@ -54,7 +47,6 @@ def add_product():
     products["products"].append({"barcode": barcode, "title": title})
     with open("products.json", "w") as f:
         json.dump(products, f)
-
 
 def generate_barcode():
     barcode = barcode_textbox
@@ -72,6 +64,7 @@ def generate_barcode():
     # Set the product title as the filename
     filename = "{}.png".format(barcode)
 
+    # Set the API endpoint URL
     # Set the API endpoint URL with includetext parameter
     url = "https://bwipjs-api.metafloor.com/?bcid={}&text={}&includetext=1&bg=ffffff".format(bcid, ean)
     st.write("Barcode URL:", url)
@@ -86,18 +79,18 @@ def generate_barcode():
 
     # Open the saved barcode image
     filename = filename.strip()
-    
+
     # Create a new image with extra margin to fit the wrapped product title text
     with Image.open(filename) as img:
         # Get the size of the barcode image
         width, height = img.size
-        
+
         max_title_width = 40 # Set the maximum width for the product title text
         wrapped_title = textwrap.wrap(title_textbox, width=max_title_width, break_long_words=True) # Wrap the product title text into multiple lines if it is too long to fit
         wrapped_title_height = 0 # Calculate the total height required for the wrapped product title text
         for line in wrapped_title:
             wrapped_title_height += font.getsize(line)[1]
-
+            
         # Calculate the total width required for the title and barcode
         total_width = max(width, font.getsize(title_textbox)[0])
 
