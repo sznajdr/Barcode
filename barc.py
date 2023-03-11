@@ -92,7 +92,7 @@ def generate_barcode():
             x_offset = int((new_width - line_width) / 2)
 
             # Draw the text on the new image
-            draw.text(x_offset, y_offset), line, font=font, fill=(0, 0, 0, 255))
+            draw.text((x_offset, y_offset), line, font=font, fill=(0, 0, 0, 255))
             y_offset += line_height
 
             # Save the final image with the wrapped product title text
