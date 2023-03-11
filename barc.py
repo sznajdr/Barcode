@@ -6,7 +6,6 @@ import textwrap
 
 st.set_page_config(page_title="Barcode Generator")
 filename = "barcode.png"  # define filename with a default value
-st.markdown("[products.csv colab](https://colab.research.google.com/github/sznajdr/barcs/blob/main/barcodezz_csv.ipynb)")
 
 # Download Arial.ttf if it doesn't exist
 if not os.path.exists("Arial.ttf"):
@@ -107,3 +106,4 @@ def generate_barcode():
     
 if generate_button:
     generate_barcode()
+st.markdown("[products.csv in colab](https://colab.research.google.com/drive/16l0hgwL2Mg-FkCQBiKBLIVj1IX6GsCrA?usp=sharing)")
