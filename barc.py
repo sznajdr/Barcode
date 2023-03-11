@@ -6,6 +6,51 @@ import requests
 import os
 from PIL import Image, ImageFont, ImageDraw
 import textwrap
+from pandas import DataFrame
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QTableView, QAbstractTableModel
+
+class pandasModel(QAbstractTableModel):
+    def __init__(self, data):
+        QAbstractTableModel.__init__(self)
+        self._data = data
+
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            # See below for the nested-list data structure.
+            # .row() indexes into the outer list,
+            # .column() indexes into the sub-list
+            return str(self._data.iloc[index.row()][index.column()])
+
+        if role == Qt.BackgroundRole:
+            if index.row() % 2 == 0:
+                return QColor(250, 250, 250)
+            else:
+                return QColor(255, 255, 255)
+
+    def setData(self, index, value, role):
+        if role == Qt.EditRole:
+            row = index.row()
+            col = index.column()
+            self._data.iloc[row][col] = value
+            self.dataChanged.emit(index, index)
+            return True
+
+    def flags(self, index):
+        return Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable
+
+    def rowCount(self, parent=None):
+        return len(self._data.index)
+
+    def columnCount(self, parent=None):
+        return len(self._data.columns)
+
+    def headerData(self, col, orientation, role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self._data.columns[col]
+        return None
+
 
 st.set_page_config(page_title="Barcode Generator")
 
