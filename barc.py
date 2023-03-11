@@ -94,7 +94,7 @@ def generate_barcode():
         new_img = Image.alpha_composite(new_img, overlay)
 
         # Save the final image with the product title as the filename
-        final_filename = "{}_with_title.png".format(barcode)
+        final_filename = "{}_final.png".format(title)
         new_img.save(final_filename)
         st.write("Saved final image as:", final_filename)
         # Display the new image with the product title
