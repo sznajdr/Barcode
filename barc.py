@@ -88,20 +88,22 @@ def generate_barcode():
             # Get the width of the current line of text
             line_width, line_height = font.getsize(line)
 
-            # Calculate the X coordinate for centering the text
-            x_offset = int((new_width - line_width) / 2)
+             # Calculate the X coordinate for centering the text
+    x = int((new_width - line_width) / 2)
 
-            # Draw the text on the new image
-            draw.text((x_offset, y_offset), line, font=font, fill=(0, 0, 0, 255))
-            y_offset += line_height
+        # Draw the text on the image
+        draw.text((x, y_offset), line, font=font, fill=(0, 0, 0, 255))
 
-    # Save the final image with the wrapped product title text
-    new_filename = "{}_title.png".format(barcode)
-    new_img.save(new_filename)
-    st.write("Saved final barcode image with title as:", new_filename)
+        # Increment the Y coordinate for the next line
+        y_offset += line_height
 
-    # Display the new image with the product title
-    st.image(new_filename, use_column_width=True)
-
+    # Save the final image with the wrapped product title
+    final_filename = "{}_title.png".format(barcode)
+    new_img.save(final_filename)
+    st.write("Saved barcode image with title as:", final_filename)
+    #Create UI elements for barcode generation
+barcode_textbox = st.text_input("Enter EAN13 Barcode Number:")
+title_textbox = st.text_input("Enter Product Title:")
+generate_button = st.button("Generate Barcode")
 if generate_button:
     generate_barcode()
