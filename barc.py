@@ -44,8 +44,9 @@ def generate_barcode():
 
     # Save the returned PNG image file with the product title as the filename
     with open(filename, "wb") as f:
-    f.write(response.content)
+        f.write(response.content)
     st.write("Saved barcode image as:", filename)
+
 
 # Open the saved barcode image
 filename = filename.strip()
